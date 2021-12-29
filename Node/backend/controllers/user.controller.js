@@ -14,7 +14,7 @@ exports.getOneUser = async (req, res) => {
   try {
     const { id } = req.params;
     const oneUser = await storageUser.getOneUser(id);
-    res.json({ message: 'One user', oneUser });
+    res.send({ message: 'One user', oneUser });
   } catch (error) {
     console.error(error);
   }
@@ -23,21 +23,29 @@ exports.getOneUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
   try {
     const allUsers = await storageUser.getUsers();
-    const allUsersResponse = allUsers.map((user) => ({
-      id: user.id,
-      name: user.name,
-      surname: user.surname
-    }))
-    res.json({ message: 'All users', allUsersResponse });
+    res.json({ message: 'All users', allUsers });
   } catch (error) {
     console.error(error);
   }
 };
 
 exports.updateUser = async (req, res) => {
-
+  try {
+    const { id } = req.params;
+    const { name, surname } = req.body;
+    const updatedUser = await storageUser.updateUser(id, name, surname);
+    res.json({ message: 'User updated', updatedUser });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 exports.deleteUser = async (req, res) => {
-
+  try {
+    const { id } = req.params;
+    await storageUser.deleteUser(id);
+    res.json({ message: 'User deleted' });
+  } catch (error) {
+    console.log(error);
+  }
 };

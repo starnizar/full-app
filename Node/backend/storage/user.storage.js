@@ -23,16 +23,15 @@ exports.getOneUser = async (id) => {
   return oneUser;
 };
 
-exports.updateUser = async (name, surname) => {
+exports.updateUser = async (id, name, surname) => {
   await pool.query('BEGIN');
-  const newUser = collection.getOne(await pool.query('INSERT INTO person (name, surname) VALUES ($1, $2) RETURNING *', [name, surname]));
+  const updatedUser = collection.getOne(await pool.query('UPDATE person SET name = $2, surname = $3 WHERE id = $1 RETURNING *', [id, name, surname]));
   await pool.query('COMMIT');
-  return newUser;
+  return updatedUser;
 };
 
-exports.deleteUser = async (name, surname) => {
+exports.deleteUser = async (id) => {
   await pool.query('BEGIN');
-  const newUser = collection.getOne(await pool.query('INSERT INTO person (name, surname) VALUES ($1, $2) RETURNING *', [name, surname]));
+  await pool.query('DELETE FROM person WHERE id = $1', [id]);
   await pool.query('COMMIT');
-  return newUser;
 };
