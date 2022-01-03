@@ -1,35 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native';
-import {useEffect, useState} from "react";
-import {getAllUsers} from "./requests/userRequests";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UsersScreen from './screens/UsersScreen';
+import SelectedUser from './screens/SelectedUser';
+import AddUserButton from "./components/AddUserButton";
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 export default function App() {
-  const [users, setUsers] = useState([]);
-
-  const fetchData = async () => {
-    const response = await getAllUsers();
-    setUsers(response.data);
-  }
-
-  console.log(users);
-
-  useEffect(() => {
-    fetchData();
-  }, [])
+  const Stack = createNativeStackNavigator();
 
   return (
-    <View style={styles.container}>
-      {users.allUsers && users.allUsers.map((user) => (
-        <Text key={user.id}>`${user.name} ${user.surname}`</Text>
-      ))}
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={{headerRight: (props) => <AddUserButton {...props} />}}
+            name="All users"
+            component={UsersScreen}
+          />
+          <Stack.Screen name="Selected user" component={SelectedUser} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};

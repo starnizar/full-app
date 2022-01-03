@@ -19,7 +19,6 @@ exports.getOneUser = async (id) => {
   await pool.query('BEGIN');
   const oneUser = collection.getOne(await pool.query('SELECT * from person WHERE id = $1', [id]));
   await pool.query('COMMIT');
-  console.log('request');
   return oneUser;
 };
 
