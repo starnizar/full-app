@@ -3,13 +3,16 @@ import {StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import Card from '../components/Card';
 import MyScrollView from "../components/MyScrollView";
 import Loader from "../components/Loader";
+import ModalForm from "../components/ModalForm";
 
 const SelectedUser = props => {
-  const { navigation, route } = props;
+  const { route } = props;
   const { userId } = route.params;
   const [loaded, setLoaded] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [userPosts, setUserPosts] = useState([])
+
+  const inputs = ['Title', 'Content'];
 
   const fetchUser = async id => {
     const response = await fetch(`http://localhost:8080/api/users/${id}`);
@@ -31,6 +34,23 @@ const SelectedUser = props => {
     }
   }, [])
 
+  const submitHandler = async data => {
+    try {
+      await fetch(`http://localhost:8080/api/post`, {
+        method: 'POST',
+        body: JSON.stringify({
+          title: data.Title,
+          content: data.Content,
+          userId: userId
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      fetchUserPosts(userId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return(
     <View style={styles.container}>
       <Text style={styles.heading}>{selectedUser.name} {selectedUser.surname}</Text>
@@ -48,6 +68,7 @@ const SelectedUser = props => {
           }
         </MyScrollView>
       }
+      <ModalForm submitHandler={submitHandler} inputs={inputs} />
     </View>
   );
 };
