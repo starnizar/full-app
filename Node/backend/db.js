@@ -4,7 +4,7 @@ const pool = new Pool({
   password: 'iopoip',
   host: 'localhost',
   port: 5432,
-  database: 'macintosh'
+  database: 'node_postgres'
 });
 
 module.exports = pool;

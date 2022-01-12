@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
+    "prod": "NODE_ENV=production nodemon index.js",
     "dev": "nodemon index.js"
   },
   "author": "",
